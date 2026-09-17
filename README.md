@@ -64,20 +64,6 @@ omarchy plugin add https://github.com/grold/omarchy-temperature-widget.git --ena
 
 ## Bar Placement & Positioning
 
-### Position in the Top Bar
-
-Omarchy allows the bar to be placed at the top, bottom, left, or right edge of the screen:
-
-```bash
-# Place the bar at the top edge of the screen:
-omarchy bar position top
-
-# Or return to the bottom:
-omarchy bar position bottom
-```
-
-### Widget Placement on the Bar
-
 The widget is placed in `~/.config/omarchy/shell.json`. You can move it using the `omarchy bar` command:
 
 ```bash
