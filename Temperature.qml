@@ -137,6 +137,8 @@ BarWidget {
     id: button
     anchors.fill: parent
     bar: root.bar
+    text: root.iconGlyph + " " + root.displayText
+    foreground: root.tempColor
     fontSize: Style.font.caption
     horizontalMargin: 8
     verticalPadding: 6
@@ -149,30 +151,6 @@ BarWidget {
         root.refresh()
       } else {
         root.toggle()
-      }
-    }
-
-    Row {
-      anchors.centerIn: parent
-      spacing: Style.space(5)
-
-      Text {
-        textFormat: Text.PlainText
-        anchors.verticalCenter: parent.verticalCenter
-        text: root.iconGlyph
-        color: root.tempColor
-        font.family: root.bar ? root.bar.fontFamily : Style.font.family
-        font.pixelSize: Style.font.caption
-      }
-
-      Text {
-        textFormat: Text.PlainText
-        anchors.verticalCenter: parent.verticalCenter
-        text: root.displayText
-        color: root.tempColor
-        font.family: root.bar ? root.bar.fontFamily : Style.font.family
-        font.pixelSize: Style.font.caption
-        font.bold: root.status === "hot" || root.status === "critical"
       }
     }
   }
