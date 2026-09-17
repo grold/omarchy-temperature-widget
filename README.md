@@ -6,7 +6,7 @@ A native Quickshell bar widget and hardware temperature monitor for the Omarchy 
 ![Kind](https://img.shields.io/badge/kind-bar--widget-green)
 
 <p align="center">
-  <img src="screenshot.png" alt="Omarchy Temperature Widget Screenshot" width="480">
+  <img src="preview.png" alt="Omarchy Temperature Widget Preview" width="480">
 </p>
 
 ---
