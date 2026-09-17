@@ -99,7 +99,7 @@ BarWidget {
     id: queryProc
     command: [
       "bash",
-      Qt.resolvedUrl("get-temps.sh").replace(/^file:\/\//, "")
+      String(Qt.resolvedUrl("get-temps.sh")).replace(/^file:\/\//, "")
     ]
 
     stdout: StdioCollector {
@@ -572,13 +572,13 @@ BarWidget {
                 color: Qt.rgba(Color.foreground.r, Color.foreground.g, Color.foreground.b, 0.03)
                 borderSpec: Border.controlSpec("normal", Color.foreground, Color.accent)
 
-                Row {
+                Item {
                   anchors.fill: parent
                   anchors.leftMargin: Style.space(12)
                   anchors.rightMargin: Style.space(12)
-                  anchors.verticalCenter: parent.verticalCenter
 
                   Row {
+                    anchors.left: parent.left
                     anchors.verticalCenter: parent.verticalCenter
                     spacing: Style.space(8)
 
@@ -599,12 +599,6 @@ BarWidget {
                       font.family: Style.font.family
                       font.pixelSize: Style.font.bodySmall
                     }
-                  }
-
-                  Item {
-                    Layout.fillWidth: true
-                    width: panelColumn.width - Style.space(200)
-                    height: 1
                   }
 
                   Text {
@@ -644,13 +638,13 @@ BarWidget {
               color: Qt.rgba(Color.foreground.r, Color.foreground.g, Color.foreground.b, 0.03)
               borderSpec: Border.controlSpec("normal", Color.foreground, Color.accent)
 
-              Row {
+              Item {
                 anchors.fill: parent
                 anchors.leftMargin: Style.space(12)
                 anchors.rightMargin: Style.space(12)
-                anchors.verticalCenter: parent.verticalCenter
 
                 Row {
+                  anchors.left: parent.left
                   anchors.verticalCenter: parent.verticalCenter
                   spacing: Style.space(8)
 
@@ -671,12 +665,6 @@ BarWidget {
                     font.family: Style.font.family
                     font.pixelSize: Style.font.bodySmall
                   }
-                }
-
-                Item {
-                  Layout.fillWidth: true
-                  width: panelColumn.width - Style.space(160)
-                  height: 1
                 }
 
                 Text {
