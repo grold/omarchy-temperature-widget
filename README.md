@@ -48,6 +48,14 @@ grold.temperature/
 └── README.md           # Documentation
 ```
 
+## Installation
+
+Install directly into Omarchy using the CLI:
+
+```bash
+omarchy plugin add https://github.com/grold/omarchy-temperature-widget.git --enable
+```
+
 ---
 
 ## Bar Placement & Positioning
