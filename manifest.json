@@ -1,0 +1,43 @@
+{
+  "schemaVersion": 1,
+  "id": "grold.temperature",
+  "name": "Temperature",
+  "version": "1.0.0",
+  "author": "grold",
+  "description": "System hardware temperature monitor for CPU, GPU, Storage, and Motherboard",
+  "kinds": [
+    "bar-widget"
+  ],
+  "entryPoints": {
+    "barWidget": "Temperature.qml"
+  },
+  "barWidget": {
+    "displayName": "Temperature",
+    "description": "Hardware temperatures for CPU, GPU, storage, and motherboard",
+    "category": "System",
+    "allowMultiple": false,
+    "defaultSection": "right",
+    "defaults": {
+      "format": "compact",
+      "unit": "C",
+      "interval": 3000
+    },
+    "schema": [
+      {
+        "key": "format",
+        "type": "string",
+        "label": "Display format (compact, cpu, multi, max)"
+      },
+      {
+        "key": "unit",
+        "type": "string",
+        "label": "Temperature unit (C or F)"
+      },
+      {
+        "key": "interval",
+        "type": "number",
+        "label": "Update interval in milliseconds"
+      }
+    ]
+  }
+}
