@@ -99,7 +99,7 @@ BarWidget {
     id: queryProc
     command: [
       "bash",
-      String(Qt.resolvedUrl("get-temps.sh")).replace(/^file:\/\//, "")
+      Qt.resolvedUrl("get-temps.sh").toString().replace(/^file:\/\//, "")
     ]
 
     stdout: StdioCollector {
