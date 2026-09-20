@@ -11,6 +11,14 @@ if command -v sensors >/dev/null 2>&1; then
   sensors_json=$(sensors -j 2>/dev/null || true)
 fi
 
+# lm-sensors emits bare NaN/inf for attributes a chip does not support
+# (e.g. dell_smm pwm1_enable). Those are not valid JSON, so JSON.parse()
+# throws in the widget and it renders no data. Normalise them to null.
+if [ -n "$sensors_json" ]; then
+  sensors_json=$(printf '%s' "$sensors_json" \
+    | sed -E 's/:[[:space:]]*-?(NaN|nan|NAN|[Ii]nfinity|[Ii]nf)([[:space:]]*[,}])/: null\2/g')
+fi
+
 # If sensors returned valid JSON
 if [ -z "$sensors_json" ] || [ "$sensors_json" = "{}" ]; then
   # Fallback to sysfs hwmon
