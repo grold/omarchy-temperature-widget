@@ -73,15 +73,13 @@ function parseSensors(rawText) {
         var val = chipData[key];
         if (!val || typeof val !== "object") continue;
 
-        var tempKey = findKeyEnding(val, "_input");
+        var tempKey = findTempKey(val);
         if (!tempKey) continue;
         var t = parseFloat(val[tempKey]);
         if (isNaN(t)) continue;
 
-        var maxKey = findKeyEnding(val, "_max");
-        var critKey = findKeyEnding(val, "_crit");
-        var maxVal = maxKey ? parseFloat(val[maxKey]) : 100;
-        var critVal = critKey ? parseFloat(val[critKey]) : 100;
+        var maxVal = tempAttr(val, tempKey, "_max", 100);
+        var critVal = tempAttr(val, tempKey, "_crit", 100);
 
         allTemps.push(t);
 
@@ -113,13 +111,12 @@ function parseSensors(rawText) {
         var sval = chipData[skey];
         if (!sval || typeof sval !== "object") continue;
 
-        var stempKey = findKeyEnding(sval, "_input");
+        var stempKey = findTempKey(sval);
         if (!stempKey) continue;
         var st = parseFloat(sval[stempKey]);
         if (isNaN(st)) continue;
 
-        var scritKey = findKeyEnding(sval, "_crit");
-        var scrit = scritKey ? parseFloat(sval[scritKey]) : 90;
+        var scrit = tempAttr(sval, stempKey, "_crit", 90);
 
         allTemps.push(st);
         storage.push({
@@ -141,13 +138,12 @@ function parseSensors(rawText) {
         var gval = chipData[gkey];
         if (!gval || typeof gval !== "object") continue;
 
-        var gtempKey = findKeyEnding(gval, "_input");
+        var gtempKey = findTempKey(gval);
         if (!gtempKey) continue;
         var gt = parseFloat(gval[gtempKey]);
         if (isNaN(gt)) continue;
 
-        var gcritKey = findKeyEnding(gval, "_crit");
-        var gcrit = gcritKey ? parseFloat(gval[gcritKey]) : 95;
+        var gcrit = tempAttr(gval, gtempKey, "_crit", 95);
 
         allTemps.push(gt);
         if (!gpu) gpu = { temp: gt, label: "GPU", max: 95, crit: gcrit, details: [] };
@@ -167,7 +163,7 @@ function parseSensors(rawText) {
         var mval = chipData[mkey];
         if (!mval || typeof mval !== "object") continue;
 
-        var mtempKey = findKeyEnding(mval, "_input");
+        var mtempKey = findTempKey(mval);
         if (!mtempKey) continue;
         var mt = parseFloat(mval[mtempKey]);
         if (isNaN(mt)) continue;
@@ -203,13 +199,27 @@ function parseSensors(rawText) {
   };
 }
 
-function findKeyEnding(obj, suffix) {
+// lm-sensors groups every reading of a chip into one object, so a single entry
+// can carry voltages (in0_input), currents (curr1_input) and fan speeds
+// (fan1_input) next to temperatures. Matching a bare "_input" suffix picked
+// those up and reported a 20 V USB-C rail as 20 C. Only temp*_input is a
+// temperature.
+function findTempKey(obj) {
   for (var k in obj) {
-    if (obj.hasOwnProperty(k) && k.indexOf(suffix, k.length - suffix.length) !== -1) {
+    if (obj.hasOwnProperty(k) && /^temp[0-9]*_input$/.test(k)) {
       return k;
     }
   }
   return null;
+}
+
+// Read a sibling attribute of the same sensor: temp2_input -> temp2_crit.
+// Guards against borrowing fan1_max or in0_max from an unrelated reading.
+function tempAttr(obj, tempKey, suffix, fallback) {
+  var k = tempKey.replace(/_input$/, suffix);
+  if (!obj.hasOwnProperty(k)) return fallback;
+  var v = parseFloat(obj[k]);
+  return isNaN(v) ? fallback : v;
 }
 
 function emptyModel() {
@@ -274,7 +284,7 @@ function formatTooltip(model, unit) {
 
   if (model.system.length > 0) {
     var sysStr = model.system.map(function(s) {
-      return s.chip + ": " + formatValue(s.temp, unit);
+      return s.chip + " " + s.name + ": " + formatValue(s.temp, unit);
     }).join(", ");
     lines.push("• System: " + sysStr);
   }
