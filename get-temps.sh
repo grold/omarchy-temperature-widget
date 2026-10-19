@@ -65,7 +65,10 @@ fi
 # Supplement with nvidia-smi if available
 nvidia_json=""
 if command -v nvidia-smi >/dev/null 2>&1; then
-  gpu_info=$(nvidia-smi --query-gpu=name,temperature.gpu,temperature.memory --format=csv,noheader,nounits 2>/dev/null || true)
+  # nvidia-smi prints its error message to stdout and exits non-zero when the
+  # driver is not loaded (e.g. nvidia-utils pulled in by Steam on an Intel-only
+  # machine). Ignore output on failure so it is not parsed as GPU data.
+  gpu_info=$(nvidia-smi --query-gpu=name,temperature.gpu,temperature.memory --format=csv,noheader,nounits 2>/dev/null) || gpu_info=""
   if [ -n "$gpu_info" ]; then
     idx=0
     nvidia_parts=()
